@@ -13,13 +13,29 @@ var headPosition;
 
 var uniforms;
 
+var listRef = new Firebase("https://bs816m0v9d6.firebaseio-demo.com/presence/");
+var userRef = listRef.push();
+var presenceRef = new Firebase('https://bs816m0v9d6.firebaseio-demo.com/.info/connected');
+
 function init() {
+    /*otherUsersRef.transaction(function(currentUsers) {
+      // If /users/fred/rank has never been set, currentRank will be null.
+      return currentUsers+1;
+    });*/
+    presenceRef.on("value", function(snap) {
+      if (snap.val()) {
+        userRef.set(true);
+        // Remove ourselves when we disconnect.
+        userRef.onDisconnect().remove();
+      }
+    });
 
     container = document.getElementById( 'container' );
 
     //
 
-    camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 5, 1000 );
+    camera = new THREE.PerspectiveCamera( 100, window.innerWidth / window.innerHeight, 5, 5000 );
+    camera.position.set(1,1,1);
 
     scene = new THREE.Scene();
     scene.fog = new THREE.Fog( 0x050505, 2000, 3500 );
@@ -76,13 +92,13 @@ function init() {
 
 
           // positions
-          /*if(starsData[i/3].lum<200)
+          if(starsData[i/3].lum<10)
             values_size[i/3] = 1;
-          else*/
-            values_size[i/3] = starsData[i/3].lum/10;
-          var x = starsData[i/3].pos[0] * n - n2;
-          var y = starsData[i/3].pos[1] * n - n2;
-          var z = starsData[i/3].pos[2] * n - n2;
+          else
+            values_size[i/3] = starsData[i/3].lum/3;
+          var x = starsData[i/3].pos[0];
+          var y = starsData[i/3].pos[1];
+          var z = starsData[i/3].pos[2];
 
           positions[ i ]     = x;
           positions[ i + 1 ] = y;
@@ -143,10 +159,13 @@ function init() {
     headPosition = new THREE.Vector3(0,0,0);
     vrEffect = new THREE.VREffect(renderer, VREffectLoaded);
     vrControls = new THREE.VRControls(camera);
+    controls = new THREE.OrbitControls(camera, container);
+
     function VREffectLoaded(error) {
       if (error) {
         document.getElementById("toggle-render").innerHTML = error;
         document.getElementById("toggle-render").classList.add('error');
+        controls = new THREE.OrbitControls(camera, container);
       }
     }
 
@@ -179,7 +198,22 @@ function animate() {
 
 function render() {
 
-    vrControls.update(headPosition);
+    //vrControls.update(headPosition);
+    controls.update();
 		vrEffect.render( scene, camera );
 
 }
+
+// Number of online users is the number of objects in the presence list.
+listRef.on("value", function(snap) {
+  console.log("online users = " + snap.numChildren());
+  var otherUsers = snap.numChildren();
+  var geometry = new THREE.BoxGeometry( 1, 1, 1);
+  var material = new THREE.MeshBasicMaterial({color:0x00FF33});
+
+	mesh = new THREE.Mesh( geometry, material );
+  mesh.position.set(2*otherUsers, 2*otherUsers, 2*otherUsers)
+
+	scene.add( mesh );
+  console.log("added cube")
+});

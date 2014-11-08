@@ -70,7 +70,7 @@
 
           vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
 
-          gl_PointSize = size * ( 300.0 / length( mvPosition.xyz ) );
+          gl_PointSize = size * ( 300.0 / length(mvPosition.xyz ) );
 
           gl_Position = projectionMatrix * mvPosition;
 
@@ -95,11 +95,13 @@
 
       </script>
         <script src="/static/js/three.min.js"></script>
+        <script src='https://cdn.firebase.com/js/client/1.1.1/firebase.js'></script>
 
         <script src="/static/js/Detector.js"></script>
         <script src="/static/js/stats.min.js"></script>
         <script src="/static/js/VRControls.js"></script>
         <script src="/static/js/VREffect.js"></script>
+        <script src="/static/js/OrbitControls.js"></script>
         <script src="/static/js/space.js"></script>
         <script>
           window.onload = function() {
