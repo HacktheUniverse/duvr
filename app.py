@@ -5,5 +5,9 @@ app = Flask(__name__)
 def hello_world():
     return render_template('index.html')
 
+@app.route('/space')
+def space():
+    return render_template('space.html')
+
 if __name__== '__main__':
     app.run()
