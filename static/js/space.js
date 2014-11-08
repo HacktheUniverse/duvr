@@ -139,9 +139,72 @@ function init() {
 		var sphereMaterial = new THREE.MeshBasicMaterial( { color: 0xff0000, shading: THREE.FlatShading } );
     pointer = new THREE.Mesh( sphereGeometry, sphereMaterial );
 
-    if(!boolMobile){
+    if(!boolMobile || !boolVR){
       scene.add( pointer );
     }
+
+    //sun
+    var sphereGeometry = new THREE.SphereGeometry( 1, 32, 32 );
+    var sphereMaterial = new THREE.MeshBasicMaterial( { color: 0xFF8000} );
+    planet = new THREE.Mesh( sphereGeometry, sphereMaterial );
+    planet.position.set(0,0,0);
+    scene.add(planet);
+
+    //mercury
+    var sphereGeometry = new THREE.SphereGeometry( .05, 32, 32 );
+    var sphereMaterial = new THREE.MeshBasicMaterial( { color: 0xFF0000} );
+    planet = new THREE.Mesh( sphereGeometry, sphereMaterial );
+    planet.position.set(2.5,0,2.5);
+    scene.add(planet);
+
+    //venus
+    var sphereGeometry = new THREE.SphereGeometry( .1, 32, 32 );
+    var sphereMaterial = new THREE.MeshBasicMaterial( { color: 0xF5F5DC} );
+    planet = new THREE.Mesh( sphereGeometry, sphereMaterial );
+    planet.position.set(5,0,5);
+    scene.add(planet);
+
+    //earth
+    var sphereGeometry = new THREE.SphereGeometry( .1, 32, 32 );
+    var sphereMaterial = new THREE.MeshBasicMaterial( { color: 0x2E2EFE} );
+    planet = new THREE.Mesh( sphereGeometry, sphereMaterial );
+    planet.position.set(7.5,0,7.5);
+    scene.add(planet);
+
+    //mars
+    var sphereGeometry = new THREE.SphereGeometry( .05, 32, 32 );
+    var sphereMaterial = new THREE.MeshBasicMaterial( { color: 0xDF0101} );
+    planet = new THREE.Mesh( sphereGeometry, sphereMaterial );
+    planet.position.set(10,0,10);
+    scene.add(planet);
+
+    //jupiter
+    var sphereGeometry = new THREE.SphereGeometry( .5, 32, 32 );
+    var sphereMaterial = new THREE.MeshBasicMaterial( { color: 0xD7DF01} );
+    planet = new THREE.Mesh( sphereGeometry, sphereMaterial );
+    planet.position.set(12.5,0,12.5);
+    scene.add(planet);
+
+    //saturn
+    var sphereGeometry = new THREE.SphereGeometry( .4, 32, 32 );
+    var sphereMaterial = new THREE.MeshBasicMaterial( { color: 0xF5DA81} );
+    planet = new THREE.Mesh( sphereGeometry, sphereMaterial );
+    planet.position.set(15,0,15);
+    scene.add(planet);
+
+    //uranus
+    var sphereGeometry = new THREE.SphereGeometry( .2, 32, 32 );
+    var sphereMaterial = new THREE.MeshBasicMaterial( { color: 0x9FF781} );
+    planet = new THREE.Mesh( sphereGeometry, sphereMaterial );
+    planet.position.set(17.5,0,17.5);
+    scene.add(planet);
+
+    //neptune
+    var sphereGeometry = new THREE.SphereGeometry( .2, 32, 32 );
+    var sphereMaterial = new THREE.MeshBasicMaterial( { color: 0x58D3F7} );
+    planet = new THREE.Mesh( sphereGeometry, sphereMaterial );
+    planet.position.set(20,0,20);
+    scene.add(planet);
 
     //
 
@@ -163,7 +226,7 @@ function init() {
 
       var color = new THREE.Color();
 
-      var n = 5, n2 = n / 2; // particles spread in the cube
+      var n = 7, n2 = n / 2; // particles spread in the cube
 
       for ( var i = 0; i < positions.length; i += 3 ) {
 
@@ -172,7 +235,13 @@ function init() {
           /*if(starsData[i/3].lum<10)
             values_size[i/3] = 1;
           else*/
+
             values_size[i/3] = Math.log(starsData[i/3].lum);
+            if(boolMobile)
+              {
+                if(values_size[i/3]>2.5)
+                  values_size[i/3]=2.5;
+              }
           var x = starsData[i/3].pos[0];
           var y = starsData[i/3].pos[1];
           var z = starsData[i/3].pos[2];
@@ -211,6 +280,70 @@ function init() {
 
     } );
 
+    loader.load( '/static/pulse.json', function ( text ) {
+      var starsData = JSON.parse(text);
+      var particles = starsData.length;
+      console.log(particles);
+
+
+      var geometry = new THREE.BufferGeometry();
+
+      var positions = new Float32Array( particles * 3 );
+      var colors = new Float32Array( particles * 3 );
+      var values_size = new Float32Array( particles );
+
+      var color = new THREE.Color();
+
+      var n = 7, n2 = n / 2; // particles spread in the cube
+
+      for ( var i = 0; i < positions.length; i += 3 ) {
+
+
+          // positions
+          /*if(starsData[i/3].lum<10)
+            values_size[i/3] = 1;
+          else*/
+
+          values_size[i/3] = 40;
+          var x = starsData[i/3].pos[0];
+          var y = starsData[i/3].pos[1];
+          var z = starsData[i/3].pos[2];
+
+          positions[ i ]     = x;
+          positions[ i + 1 ] = y;
+          positions[ i + 2 ] = z;
+
+          // colors
+
+          var vx = 0;
+          var vy = 1;
+          var vz = 0;
+
+          color.setRGB( vx, vy, vz );
+
+          colors[ i ]     = color.r;
+          colors[ i + 1 ] = color.g;
+          colors[ i + 2 ] = color.b;
+
+      }
+
+      geometry.addAttribute( 'position', new THREE.BufferAttribute( positions, 3 ) );
+      geometry.addAttribute( 'customColor', new THREE.BufferAttribute( colors, 3 ) );
+      geometry.addAttribute( 'size', new THREE.BufferAttribute( values_size, 1 ) );
+
+      geometry.computeBoundingSphere();
+
+      //
+      var texture = THREE.ImageUtils.loadTexture( "/static/halo.jpg" );
+      var material = new THREE.PointCloudMaterial( { size: 1, map: texture, vertexColors: THREE.VertexColors} );
+
+      particleSystem = new THREE.PointCloud( geometry, shaderMaterial);
+      scene.add( particleSystem );
+
+
+    } );
+
+
 
 
     //
@@ -244,8 +377,8 @@ function init() {
        vrControls.connect();
     } else {
 	     vrControls = new THREE.VRControls(camera);
+       boolVR = true;
     }
-    controls = new THREE.OrbitControls(camera, container);
 
     function VREffectLoaded(error) {
       if (error) {
