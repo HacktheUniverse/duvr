@@ -1,7 +1,9 @@
 duvr
 ====
 
-[link](http://univrse.herokuapp.com/teacher)
+[DemoLink UniVRse](http://univrse.herokuapp.com/teacher)
+http://univrse.herokuapp.com/teacher
+
 
 
 Description
