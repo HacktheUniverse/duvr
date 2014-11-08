@@ -223,10 +223,10 @@ function init() {
 
     //
 
-    stats = new Stats();
+    /*stats = new Stats();
     stats.domElement.style.position = 'absolute';
     stats.domElement.style.top = '0px';
-    container.appendChild( stats.domElement );
+    container.appendChild( stats.domElement );*/
 
     //
 
@@ -251,6 +251,9 @@ function init() {
       if (error) {
         document.getElementById("toggle-render").innerHTML = error;
         document.getElementById("toggle-render").classList.add('error');
+        if(boolMobile){
+          document.getElementById("toggle-render").remove();
+        }
         vrControls = false;
         orbitControls = new THREE.OrbitControls(camera, container);
 
@@ -260,10 +263,11 @@ function init() {
     }
 
     //add event listener for VR button
-    document.getElementById("toggle-render").addEventListener("click", function(){
-      vrEffect.setFullScreen( true );
-    });
-
+    if(!boolMobile){
+      document.getElementById("toggle-render").addEventListener("click", function(){
+        vrEffect.setFullScreen( true );
+      });
+    }
     function onDocumentMouseMove( event ) {
 
 				event.preventDefault();
@@ -277,7 +281,7 @@ function init() {
 
         console.log(pointer.position);
         currentRef.update({ x: pointer.position.x, y: pointer.position.y, z: pointer.position.z });
-        mesh.position.copy(pointer.position)
+        //mesh.position.copy(pointer.position)
 
     }
 
@@ -299,7 +303,7 @@ function animate() {
     requestAnimationFrame( animate );
 
     render();
-    stats.update();
+    //stats.update();
 
 }
 
@@ -351,16 +355,12 @@ listRef.on("value", function(snap) {
   var geometry = new THREE.BoxGeometry( 1, 1, 1);
   var material = new THREE.MeshBasicMaterial({color:0x00FF33});
 
-	mesh = new THREE.Mesh( geometry, material );
-  mesh.position.set(2*otherUsers, 2*otherUsers, 2*otherUsers)
-
-	scene.add( mesh );
   console.log("added cube")
 });
 
 // Number of online users is the number of objects in the presence list.
 currentRef.on("value", function(snap) {
-  if(boolVR) {
+  if(boolVR || boolMobile) {
     camera.position.set(snap.val().x, snap.val().y, snap.val().z);
   }
 });

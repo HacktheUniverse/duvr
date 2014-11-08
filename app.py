@@ -5,7 +5,7 @@ app = Flask(__name__)
 def hello_world():
     return render_template('index.html')
 
-@app.route('/space')
+@app.route('/amnh')
 def space():
     return render_template('space.html')
 
