@@ -17,7 +17,7 @@ var raycaster, mouse, points = [];
 
 var particleSystem;
 
-
+var isMobile;
 
 var listRef = new Firebase("https://unvrse.firebaseio.com/presence/");
 var userRef = listRef.push();
@@ -64,6 +64,28 @@ function init() {
       texture:   { type: "t", value: THREE.ImageUtils.loadTexture( "/static/halo.png" ) }
 
     };
+
+    isMobile = {
+	Android: function() {
+            return navigator.userAgent.match(/Android/i);
+	},
+	BlackBerry: function() {
+            return navigator.userAgent.match(/BlackBerry/i);
+	},
+	iOS: function() {
+            return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+	},
+	Opera: function() {
+            return navigator.userAgent.match(/Opera Mini/i);
+	},
+	Windows: function() {
+            return navigator.userAgent.match(/IEMobile/i);
+	},
+	any: function() {
+            return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
+	}
+    };
+
 
     var shaderMaterial = new THREE.ShaderMaterial( {
 
@@ -206,7 +228,14 @@ function init() {
     //VR Stuff
     headPosition = new THREE.Vector3(0,0,0);
     vrEffect = new THREE.VREffect(renderer, VREffectLoaded);
-    vrControls = new THREE.VRControls(camera);
+
+   // If mobile device, add orientation controls.
+    if(isMobile.any()) {
+	alert("This is a Mobile Device");
+	vrControls = new THREE.DeviceOrientationControls(camera, true);
+    } else {
+	vrControls = new THREE.VRControls(camera);
+    }
     controls = new THREE.OrbitControls(camera, container);
 
     function VREffectLoaded(error) {
