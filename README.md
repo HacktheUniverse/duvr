@@ -21,7 +21,8 @@ The application loads digital universe data via the PartyView speck files.  We p
 Extensions: 
 The application loads digital universe data (via the PartyView speck files).  Pairing our application with the Digital Universe API can allow individual devices to filter their view on the fly, allowing for specific celestial objects.  For instance: specific astronomical surveys, extragalactic objects, exoplants, dwarf galaxies, star clusters, or stars filtered by color or age proxy.  Our application iteration loads PartyView speck files and can be fully generalized to any existing planetarium scales.
 
-Use Cases:
+Use Cases:  
+
 1. The ability to download pre-recorded planetarium shows onto a mobile device (with of without Google Cardboard enclosure) to allow any user to browse an archive of planetarium shows to explore the universe in their own flight.  In this use case, participants could retain their freedom to alter their orientation, akin to craning one's neck inside the planetarium! 
 
 2. The accesibility of the 3D environment from web enabled devices could be developed to allow student at a distance to watch guided planetarium shows guided by staff in realtime.   
