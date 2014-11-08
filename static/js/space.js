@@ -143,6 +143,69 @@ function init() {
       scene.add( pointer );
     }
 
+    //sun
+    var sphereGeometry = new THREE.SphereGeometry( 1, 32, 32 );
+    var sphereMaterial = new THREE.MeshBasicMaterial( { color: 0xFF8000} );
+    planet = new THREE.Mesh( sphereGeometry, sphereMaterial );
+    planet.position.set(0,0,0);
+    scene.add(planet);
+
+    //mercury
+    var sphereGeometry = new THREE.SphereGeometry( .05, 32, 32 );
+    var sphereMaterial = new THREE.MeshBasicMaterial( { color: 0xFF0000} );
+    planet = new THREE.Mesh( sphereGeometry, sphereMaterial );
+    planet.position.set(2.5,0,2.5);
+    scene.add(planet);
+
+    //venus
+    var sphereGeometry = new THREE.SphereGeometry( .1, 32, 32 );
+    var sphereMaterial = new THREE.MeshBasicMaterial( { color: 0xF5F5DC} );
+    planet = new THREE.Mesh( sphereGeometry, sphereMaterial );
+    planet.position.set(5,0,5);
+    scene.add(planet);
+
+    //earth
+    var sphereGeometry = new THREE.SphereGeometry( .1, 32, 32 );
+    var sphereMaterial = new THREE.MeshBasicMaterial( { color: 0x2E2EFE} );
+    planet = new THREE.Mesh( sphereGeometry, sphereMaterial );
+    planet.position.set(7.5,0,7.5);
+    scene.add(planet);
+
+    //mars
+    var sphereGeometry = new THREE.SphereGeometry( .05, 32, 32 );
+    var sphereMaterial = new THREE.MeshBasicMaterial( { color: 0xDF0101} );
+    planet = new THREE.Mesh( sphereGeometry, sphereMaterial );
+    planet.position.set(10,0,10);
+    scene.add(planet);
+
+    //jupiter
+    var sphereGeometry = new THREE.SphereGeometry( .5, 32, 32 );
+    var sphereMaterial = new THREE.MeshBasicMaterial( { color: 0xD7DF01} );
+    planet = new THREE.Mesh( sphereGeometry, sphereMaterial );
+    planet.position.set(12.5,0,12.5);
+    scene.add(planet);
+
+    //saturn
+    var sphereGeometry = new THREE.SphereGeometry( .4, 32, 32 );
+    var sphereMaterial = new THREE.MeshBasicMaterial( { color: 0xF5DA81} );
+    planet = new THREE.Mesh( sphereGeometry, sphereMaterial );
+    planet.position.set(15,0,15);
+    scene.add(planet);
+
+    //uranus
+    var sphereGeometry = new THREE.SphereGeometry( .2, 32, 32 );
+    var sphereMaterial = new THREE.MeshBasicMaterial( { color: 0x9FF781} );
+    planet = new THREE.Mesh( sphereGeometry, sphereMaterial );
+    planet.position.set(17.5,0,17.5);
+    scene.add(planet);
+
+    //neptune
+    var sphereGeometry = new THREE.SphereGeometry( .2, 32, 32 );
+    var sphereMaterial = new THREE.MeshBasicMaterial( { color: 0x58D3F7} );
+    planet = new THREE.Mesh( sphereGeometry, sphereMaterial );
+    planet.position.set(20,0,20);
+    scene.add(planet);
+
     //
 
 
@@ -163,7 +226,7 @@ function init() {
 
       var color = new THREE.Color();
 
-      var n = 5, n2 = n / 2; // particles spread in the cube
+      var n = 7, n2 = n / 2; // particles spread in the cube
 
       for ( var i = 0; i < positions.length; i += 3 ) {
 
