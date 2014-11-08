@@ -139,7 +139,7 @@ function init() {
 		var sphereMaterial = new THREE.MeshBasicMaterial( { color: 0xff0000, shading: THREE.FlatShading } );
     pointer = new THREE.Mesh( sphereGeometry, sphereMaterial );
 
-    if(!boolMobile){
+    if(!boolMobile || !boolVR){
       scene.add( pointer );
     }
 
@@ -172,7 +172,13 @@ function init() {
           /*if(starsData[i/3].lum<10)
             values_size[i/3] = 1;
           else*/
+
             values_size[i/3] = Math.log(starsData[i/3].lum);
+            if(boolMobile)
+              {
+                if(values_size[i/3]>2.5)
+                  values_size[i/3]=2.5;
+              }
           var x = starsData[i/3].pos[0];
           var y = starsData[i/3].pos[1];
           var z = starsData[i/3].pos[2];
@@ -244,8 +250,8 @@ function init() {
        vrControls.connect();
     } else {
 	     vrControls = new THREE.VRControls(camera);
+       boolVR = true;
     }
-    controls = new THREE.OrbitControls(camera, container);
 
     function VREffectLoaded(error) {
       if (error) {
