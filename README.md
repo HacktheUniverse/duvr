@@ -1,7 +1,7 @@
-duvr
+uniVRse
 ====
 
-Demo UniRVse: [http://univrse.io/](http://univrse.io)
+Demo uniVRse: [http://univrse.io/](http://univrse.io)
 
 Education challenge!
 
