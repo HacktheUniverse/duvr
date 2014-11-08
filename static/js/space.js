@@ -27,6 +27,31 @@ var userRef = listRef.push();
 var presenceRef = new Firebase('https://unvrse.firebaseio.com/.info/connected');
 var currentRef = new Firebase('https://unvrse.firebaseio.com/current');
 
+var boolMobile = false;
+
+isMobile = {
+Android: function() {
+        return navigator.userAgent.match(/Android/i);
+},
+BlackBerry: function() {
+        return navigator.userAgent.match(/BlackBerry/i);
+},
+iOS: function() {
+        return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+},
+Opera: function() {
+        return navigator.userAgent.match(/Opera Mini/i);
+},
+Windows: function() {
+        return navigator.userAgent.match(/IEMobile/i);
+},
+any: function() {
+        return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
+}
+};
+
+boolMobile = isMobile.any();
+
 function init() {
     /*otherUsersRef.transaction(function(currentUsers) {
       // If /users/fred/rank has never been set, currentRank will be null.
@@ -66,27 +91,6 @@ function init() {
       color:     { type: "c", value: new THREE.Color( 0xffffff ) },
       texture:   { type: "t", value: THREE.ImageUtils.loadTexture( "/static/halo.png" ) }
 
-    };
-
-    isMobile = {
-	Android: function() {
-            return navigator.userAgent.match(/Android/i);
-	},
-	BlackBerry: function() {
-            return navigator.userAgent.match(/BlackBerry/i);
-	},
-	iOS: function() {
-            return navigator.userAgent.match(/iPhone|iPad|iPod/i);
-	},
-	Opera: function() {
-            return navigator.userAgent.match(/Opera Mini/i);
-	},
-	Windows: function() {
-            return navigator.userAgent.match(/IEMobile/i);
-	},
-	any: function() {
-            return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
-	}
     };
 
 
@@ -135,7 +139,9 @@ function init() {
 		var sphereMaterial = new THREE.MeshBasicMaterial( { color: 0xff0000, shading: THREE.FlatShading } );
     pointer = new THREE.Mesh( sphereGeometry, sphereMaterial );
 
-    scene.add( pointer );
+    if(!boolMobile){
+      scene.add( pointer );
+    }
 
     //
 
@@ -234,10 +240,10 @@ function init() {
 
    // If mobile device, add orientation controls.
     if(isMobile.any()) {
-	alert("This is a Mobile Device");
-	vrControls = new THREE.DeviceOrientationControls(camera, true);
+	     vrControls = new THREE.DeviceOrientationControls(camera, true);
+       vrControls.connect();
     } else {
-	vrControls = new THREE.VRControls(camera);
+	     vrControls = new THREE.VRControls(camera);
     }
     controls = new THREE.OrbitControls(camera, container);
 
@@ -304,30 +310,32 @@ function render() {
     else
       orbitControls.update();
 
-    var vector = new THREE.Vector3( mouse.x, mouse.y, 1 ).unproject(camera);
+    if(!boolMobile){
+      var vector = new THREE.Vector3( mouse.x, mouse.y, 1 ).unproject(camera);
 
-  	raycaster.set( camera.position, vector.sub( camera.position ).normalize() );
+    	raycaster.set( camera.position, vector.sub( camera.position ).normalize() );
 
-    if(particleSystem) {
-    	var intersects = raycaster.intersectObject(particleSystem, true);
-      if ( intersects.length > 0 ) {
+      if(particleSystem) {
+      	var intersects = raycaster.intersectObject(particleSystem, true);
+        if ( intersects.length > 0 ) {
 
-        var intersect = intersects[ 0 ];
-        var selectPos = new THREE.Vector3( intersect.point.x, intersect.point.y, intersect.point.z )
-        //intersects[ 0 ].point.material.color.setHex(0x00FF33)
+          var intersect = intersects[ 0 ];
+          var selectPos = new THREE.Vector3( intersect.point.x, intersect.point.y, intersect.point.z )
+          //intersects[ 0 ].point.material.color.setHex(0x00FF33)
 
-        pointer.position.copy(intersect.point);
+          pointer.position.copy(intersect.point);
 
-        //mesh.updateMatrix();
+          //mesh.updateMatrix();
 
-        //pointer.geometry.applyMatrix( mesh.matrix );
+          //pointer.geometry.applyMatrix( mesh.matrix );
 
-        //pointer.visible = true;
+          //pointer.visible = true;
 
-      } else {
+        } else {
 
-        //pointer.visible = false;
+          //pointer.visible = false;
 
+        }
       }
     }
 
