@@ -1,8 +1,8 @@
 duvr
 ====
 
-demolink: univrse.herokuapp.com/teacher
----------------------------------------
+[link](http://univrse.herokuapp.com/teacher)
+
 
 Description
 -----------
@@ -19,5 +19,6 @@ There are several main ways in which this could be used:
 
 2. The accesibility of the 3d environment from mobile devices could be developed to allow student at a distance to watch guided 		planetarium shows guided by staff in realtime.   
 
-3.Create a potentially interactive exhibit at the museum using virtual reality devices to prove supplemental activities for visitors 	of the museum and allow them to fly around the stars.  
+3. Create a potentially interactive exhibit at the museum using virtual reality devices to prove supplemental activities for 
+	visitors of the museum and allow them to fly around the stars.  
 
