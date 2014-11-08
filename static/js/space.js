@@ -17,6 +17,9 @@ var raycaster, mouse, points = [];
 
 var particleSystem;
 
+var orbitControls;
+var boolVR = false;
+
 
 
 var listRef = new Firebase("https://unvrse.firebaseio.com/presence/");
@@ -41,7 +44,7 @@ function init() {
 
     //
 
-    camera = new THREE.PerspectiveCamera( 100, window.innerWidth / window.innerHeight, 5, 5000 );
+    camera = new THREE.PerspectiveCamera( 100, window.innerWidth / window.innerHeight, .1, 5000 );
     camera.position.set(1,1,1);
 
     scene = new THREE.Scene();
@@ -207,14 +210,18 @@ function init() {
     headPosition = new THREE.Vector3(0,0,0);
     vrEffect = new THREE.VREffect(renderer, VREffectLoaded);
     vrControls = new THREE.VRControls(camera);
-    controls = new THREE.OrbitControls(camera, container);
+    orbitControls = null;
 
     function VREffectLoaded(error) {
       if (error) {
         document.getElementById("toggle-render").innerHTML = error;
         document.getElementById("toggle-render").classList.add('error');
-        controls = new THREE.OrbitControls(camera, container);
+        vrControls = false;
+        orbitControls = new THREE.OrbitControls(camera, container);
+
       }
+      else
+        boolVR = true;
     }
 
     //add event listener for VR button
@@ -263,8 +270,10 @@ function animate() {
 
 function render() {
 
-    //vrControls.update(headPosition);
-    controls.update();
+    if(vrControls)
+      vrControls.update(headPosition);
+    else
+      orbitControls.update();
 
     var vector = new THREE.Vector3( mouse.x, mouse.y, 1 ).unproject(camera);
 
@@ -310,4 +319,11 @@ listRef.on("value", function(snap) {
 
 	scene.add( mesh );
   console.log("added cube")
+});
+
+// Number of online users is the number of objects in the presence list.
+currentRef.on("value", function(snap) {
+  if(boolVR) {
+    camera.position.set(snap.val().x, snap.val().y, snap.val().z);
+  }
 });
