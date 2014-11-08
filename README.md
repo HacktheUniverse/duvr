@@ -10,7 +10,7 @@ Description
 -----------
 
 
-UniVRse is a interactive planetarium using the museum's partyview data and making it accesible to anyone with a smartphone, computer or virtual reality headset.This web platform allows a "Teacher" to run through a lesson with a classroom in the stars with each individual joining the classroom from their remote device. The "Teacher" decides where the classroom travels in space and allows them to learn about the location, clestial or planetary. This allows for accesibility of the awesomeness of Hayden Planetarium for those who do not have the priveledge of living close to the museum. Also, this creates a user friendly and inexpensive way for students to engage with the milky way in an immersive and ineractive manner, sparking interest in astronomy.  
+UniVRse is a interactive planetarium using the museum's partyview data and making it accesible to anyone with a smartphone, computer or virtual reality headset.This web platform allows a "Teacher" to run through a lesson with a classroom in the stars with each individual joining the classroom from their remote device. The "Teacher" decides where the classroom travels in space and allows them to learn about the location, celestial or planetary. This allows for accesibility of the awesomeness of Hayden Planetarium for those who do not have the priveledge of living close to the museum. Also, this creates a user friendly and inexpensive way for students to engage with the milky way in an immersive and ineractive manner, sparking interest in astronomy.  
 
 The mobile application is paired with digital universe api to filter a selection of information on the fly, allowing for an indivifual to sample a focused view of for instance:exoplants, dwarf galaxies, or star clusters.  
 
