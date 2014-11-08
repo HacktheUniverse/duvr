@@ -1,7 +1,7 @@
 duvr
 ====
 
-Demo UniRVse: [http://univrse.herokuapp.com/instructor](http://univrse.herokuapp.com/instructor)
+Demo UniRVse: [http://univrse.herokuapp.com/](http://univrse.herokuapp.com/)
 
 Education challenge!
 
