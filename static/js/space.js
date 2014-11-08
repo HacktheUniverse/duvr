@@ -27,6 +27,31 @@ var userRef = listRef.push();
 var presenceRef = new Firebase('https://unvrse.firebaseio.com/.info/connected');
 var currentRef = new Firebase('https://unvrse.firebaseio.com/current');
 
+var boolMobile = false;
+
+isMobile = {
+Android: function() {
+        return navigator.userAgent.match(/Android/i);
+},
+BlackBerry: function() {
+        return navigator.userAgent.match(/BlackBerry/i);
+},
+iOS: function() {
+        return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+},
+Opera: function() {
+        return navigator.userAgent.match(/Opera Mini/i);
+},
+Windows: function() {
+        return navigator.userAgent.match(/IEMobile/i);
+},
+any: function() {
+        return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
+}
+};
+
+boolMobile = isMobile.any();
+
 function init() {
     /*otherUsersRef.transaction(function(currentUsers) {
       // If /users/fred/rank has never been set, currentRank will be null.
@@ -66,27 +91,6 @@ function init() {
       color:     { type: "c", value: new THREE.Color( 0xffffff ) },
       texture:   { type: "t", value: THREE.ImageUtils.loadTexture( "/static/halo.png" ) }
 
-    };
-
-    isMobile = {
-	Android: function() {
-            return navigator.userAgent.match(/Android/i);
-	},
-	BlackBerry: function() {
-            return navigator.userAgent.match(/BlackBerry/i);
-	},
-	iOS: function() {
-            return navigator.userAgent.match(/iPhone|iPad|iPod/i);
-	},
-	Opera: function() {
-            return navigator.userAgent.match(/Opera Mini/i);
-	},
-	Windows: function() {
-            return navigator.userAgent.match(/IEMobile/i);
-	},
-	any: function() {
-            return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
-	}
     };
 
 
@@ -135,7 +139,9 @@ function init() {
 		var sphereMaterial = new THREE.MeshBasicMaterial( { color: 0xff0000, shading: THREE.FlatShading } );
     pointer = new THREE.Mesh( sphereGeometry, sphereMaterial );
 
-    scene.add( pointer );
+    if(!boolMobile){
+      scene.add( pointer );
+    }
 
     //
 
@@ -217,10 +223,10 @@ function init() {
 
     //
 
-    stats = new Stats();
+    /*stats = new Stats();
     stats.domElement.style.position = 'absolute';
     stats.domElement.style.top = '0px';
-    container.appendChild( stats.domElement );
+    container.appendChild( stats.domElement );*/
 
     //
 
@@ -234,10 +240,10 @@ function init() {
 
    // If mobile device, add orientation controls.
     if(isMobile.any()) {
-	alert("This is a Mobile Device");
-	vrControls = new THREE.DeviceOrientationControls(camera, true);
+	     vrControls = new THREE.DeviceOrientationControls(camera, true);
+       vrControls.connect();
     } else {
-	vrControls = new THREE.VRControls(camera);
+	     vrControls = new THREE.VRControls(camera);
     }
     controls = new THREE.OrbitControls(camera, container);
 
@@ -245,6 +251,9 @@ function init() {
       if (error) {
         document.getElementById("toggle-render").innerHTML = error;
         document.getElementById("toggle-render").classList.add('error');
+        if(boolMobile){
+          document.getElementById("toggle-render").remove();
+        }
         vrControls = false;
         orbitControls = new THREE.OrbitControls(camera, container);
 
@@ -254,10 +263,11 @@ function init() {
     }
 
     //add event listener for VR button
-    document.getElementById("toggle-render").addEventListener("click", function(){
-      vrEffect.setFullScreen( true );
-    });
-
+    if(!boolMobile){
+      document.getElementById("toggle-render").addEventListener("click", function(){
+        vrEffect.setFullScreen( true );
+      });
+    }
     function onDocumentMouseMove( event ) {
 
 				event.preventDefault();
@@ -271,7 +281,7 @@ function init() {
 
         console.log(pointer.position);
         currentRef.update({ x: pointer.position.x, y: pointer.position.y, z: pointer.position.z });
-        mesh.position.copy(pointer.position)
+        //mesh.position.copy(pointer.position)
 
     }
 
@@ -293,7 +303,7 @@ function animate() {
     requestAnimationFrame( animate );
 
     render();
-    stats.update();
+    //stats.update();
 
 }
 
@@ -304,30 +314,32 @@ function render() {
     else
       orbitControls.update();
 
-    var vector = new THREE.Vector3( mouse.x, mouse.y, 1 ).unproject(camera);
+    if(!boolMobile){
+      var vector = new THREE.Vector3( mouse.x, mouse.y, 1 ).unproject(camera);
 
-  	raycaster.set( camera.position, vector.sub( camera.position ).normalize() );
+    	raycaster.set( camera.position, vector.sub( camera.position ).normalize() );
 
-    if(particleSystem) {
-    	var intersects = raycaster.intersectObject(particleSystem, true);
-      if ( intersects.length > 0 ) {
+      if(particleSystem) {
+      	var intersects = raycaster.intersectObject(particleSystem, true);
+        if ( intersects.length > 0 ) {
 
-        var intersect = intersects[ 0 ];
-        var selectPos = new THREE.Vector3( intersect.point.x, intersect.point.y, intersect.point.z )
-        //intersects[ 0 ].point.material.color.setHex(0x00FF33)
+          var intersect = intersects[ 0 ];
+          var selectPos = new THREE.Vector3( intersect.point.x, intersect.point.y, intersect.point.z )
+          //intersects[ 0 ].point.material.color.setHex(0x00FF33)
 
-        pointer.position.copy(intersect.point);
+          pointer.position.copy(intersect.point);
 
-        //mesh.updateMatrix();
+          //mesh.updateMatrix();
 
-        //pointer.geometry.applyMatrix( mesh.matrix );
+          //pointer.geometry.applyMatrix( mesh.matrix );
 
-        //pointer.visible = true;
+          //pointer.visible = true;
 
-      } else {
+        } else {
 
-        //pointer.visible = false;
+          //pointer.visible = false;
 
+        }
       }
     }
 
@@ -343,16 +355,12 @@ listRef.on("value", function(snap) {
   var geometry = new THREE.BoxGeometry( 1, 1, 1);
   var material = new THREE.MeshBasicMaterial({color:0x00FF33});
 
-	mesh = new THREE.Mesh( geometry, material );
-  mesh.position.set(2*otherUsers, 2*otherUsers, 2*otherUsers)
-
-	scene.add( mesh );
   console.log("added cube")
 });
 
 // Number of online users is the number of objects in the presence list.
 currentRef.on("value", function(snap) {
-  if(boolVR) {
+  if(boolVR || boolMobile) {
     camera.position.set(snap.val().x, snap.val().y, snap.val().z);
   }
 });
