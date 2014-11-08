@@ -280,6 +280,70 @@ function init() {
 
     } );
 
+    loader.load( '/static/pulse.json', function ( text ) {
+      var starsData = JSON.parse(text);
+      var particles = starsData.length;
+      console.log(particles);
+
+
+      var geometry = new THREE.BufferGeometry();
+
+      var positions = new Float32Array( particles * 3 );
+      var colors = new Float32Array( particles * 3 );
+      var values_size = new Float32Array( particles );
+
+      var color = new THREE.Color();
+
+      var n = 7, n2 = n / 2; // particles spread in the cube
+
+      for ( var i = 0; i < positions.length; i += 3 ) {
+
+
+          // positions
+          /*if(starsData[i/3].lum<10)
+            values_size[i/3] = 1;
+          else*/
+
+          values_size[i/3] = 40;
+          var x = starsData[i/3].pos[0];
+          var y = starsData[i/3].pos[1];
+          var z = starsData[i/3].pos[2];
+
+          positions[ i ]     = x;
+          positions[ i + 1 ] = y;
+          positions[ i + 2 ] = z;
+
+          // colors
+
+          var vx = 0;
+          var vy = 1;
+          var vz = 0;
+
+          color.setRGB( vx, vy, vz );
+
+          colors[ i ]     = color.r;
+          colors[ i + 1 ] = color.g;
+          colors[ i + 2 ] = color.b;
+
+      }
+
+      geometry.addAttribute( 'position', new THREE.BufferAttribute( positions, 3 ) );
+      geometry.addAttribute( 'customColor', new THREE.BufferAttribute( colors, 3 ) );
+      geometry.addAttribute( 'size', new THREE.BufferAttribute( values_size, 1 ) );
+
+      geometry.computeBoundingSphere();
+
+      //
+      var texture = THREE.ImageUtils.loadTexture( "/static/halo.jpg" );
+      var material = new THREE.PointCloudMaterial( { size: 1, map: texture, vertexColors: THREE.VertexColors} );
+
+      particleSystem = new THREE.PointCloud( geometry, shaderMaterial);
+      scene.add( particleSystem );
+
+
+    } );
+
+
 
 
     //
