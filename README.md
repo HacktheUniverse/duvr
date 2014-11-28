@@ -5,6 +5,8 @@ Demo uniVRse: [http://univrse.io/](http://univrse.io)
 
 Education challenge!
 
+Demo from Hack the Universe presentation: http://youtu.be/dztVFTekfEU?list=UUIuhq9LTleLC-GMdAOvvZcg
+
 
 
 
